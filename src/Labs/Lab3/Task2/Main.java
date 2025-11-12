@@ -17,37 +17,21 @@ class Ad implements Comparable<Ad> {
         this.id = id;
         this.category = category;
         this.bidValue = bidValue;
-        this.ctr = ctr;
+        this.ctr = ctr * 100;
         this.content = content;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public double getBidValue() {
-        return bidValue;
-    }
-
-    public double getCtr() {
-        return ctr;
-    }
-
-    public String getContent() {
-        return content;
-    }
+    public String getId() { return id; }
+    public String getCategory() { return category; }
+    public double getBidValue() { return bidValue; }
+    public double getCtr() { return ctr; }
+    public String getContent() { return content; }
 
     @Override
     public int compareTo(Ad o) {
-        int bidValueCompare = Double.compare(o.getBidValue(), getBidValue());
-        if (bidValueCompare == 0) {
-            return getId().compareToIgnoreCase(o.getId());
-        }
-        return bidValueCompare;
+        int cmp = Double.compare(o.bidValue, this.bidValue);
+        if (cmp != 0) return cmp;
+        return this.id.compareTo(o.id);
     }
 
     @Override
@@ -69,108 +53,89 @@ class AdRequest {
         this.keywords = keywords;
     }
 
-    public String getCategory() {
-        return category;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public String getKeywords() {
-        return keywords;
-    }
+    public String getId() { return id; }
+    public String getCategory() { return category; }
+    public double getFloorBid() { return floorBid; }
+    public String getKeywords() { return keywords; }
 
     @Override
     public String toString() {
-        return String.format("%s [%s] (floor=%.2f): %s", id, category, floorBid, keywords);
+        return String.format("%s [%s] (%.2f): %s", id, category, floorBid, keywords);
     }
 }
 
 class AdNetwork {
+    private List<Ad> ads = new ArrayList<>();
 
-    private ArrayList<Ad> ads;
-    private int size = 0;
-
-    public AdNetwork() {
-        ads = new ArrayList<>(size);
-        size++;
-    }
+    public AdNetwork() {}
 
     public void readAds(BufferedReader br) throws IOException {
         String line;
-        while ((line = br.readLine()) != null) {
-            String[] parts = line.trim().split("\\s");
-
-            if(parts.length < 5) continue;
-            if (!parts[0].startsWith("AD")) break;
-
-
+        while ((line = br.readLine()) != null && !line.trim().isEmpty()) {
+            String[] parts = line.trim().split("\\s+");
+            if (parts.length < 5) continue;
             String id = parts[0];
             String category = parts[1];
-            double bid_value = Double.parseDouble(parts[2]);
+            double bidValue = Double.parseDouble(parts[2]);
             double ctr = Double.parseDouble(parts[3]);
-            String content = String.join(" ", Arrays.copyOfRange(parts, 3, parts.length));;
+            String content = String.join(" ", Arrays.copyOfRange(parts, 4, parts.length));
 
-            ads.add(new Ad(id, category, bid_value, ctr, content));
+            ads.add(new Ad(id, category, bidValue, ctr, content));
         }
     }
+
     public List<Ad> placeAds(BufferedReader br, int k, PrintWriter pw) throws IOException {
         final double X = 5.0;
         final double Y = 100.0;
-        List<Ad> selectedAds = new ArrayList<>();
-        String line;
-        while ((line = br.readLine()) != null) {
-            String[] parts = line.split(" ");
-            String id = parts[0];
-            String category = parts[1];
-            double floorBid = Double.parseDouble(parts[2]);
 
-            String keywords = String.join(" ", Arrays.copyOfRange(parts, 3, parts.length));
+        String line = br.readLine();
+        if (line == null || line.isEmpty()) return Collections.emptyList();
 
-            AdRequest request = new AdRequest(id, category, floorBid, keywords);
+        String[] parts = line.split("\\s+");
+        String id = parts[0];
+        String category = parts[1];
+        double floorBid = Double.parseDouble(parts[2]);
+        String keywords = String.join(" ", Arrays.copyOfRange(parts, 3, parts.length));
 
-            // 1. FILTER ADS WITH BID >= FLOORBID
-            List<Ad> matchingAds = new ArrayList<>();
-            for (Ad ad : this.ads) {
-                if (ad.getBidValue() >= floorBid) {
-                    matchingAds.add(ad);
-                }
-            }
+        AdRequest request = new AdRequest(id, category, floorBid, keywords);
 
-            // 2. Compute totalScore for each and  store in a map
-            Map<Ad, Double> scoreMap = new HashMap<>();
-            for (Ad ad : matchingAds) {
-                int relevance = relevanceScore(ad, request);
-                double totalScore = relevance + X * ad.getBidValue() + Y * ad.getCtr();
-                scoreMap.put(ad, totalScore);
-            }
+        List<Ad> eligibleAds = ads.stream()
+                .filter(ad -> ad.getBidValue() >= request.getFloorBid())
+                .collect(Collectors.toList());
 
-            // 3. Sort by totalScore Descending
-            matchingAds.sort((a, b) -> Double.compare(scoreMap.get(b), scoreMap.get(a)));
+        List<ScoredAd> scoredAds = new ArrayList<>();
+        for (Ad ad : eligibleAds) {
+            double totalScore = relevanceScore(ad, request)
+                    + X * ad.getBidValue()
+                    + Y * ad.getCtr();
+            scoredAds.add(new ScoredAd(ad, totalScore));
+        }
 
-            // 4. Take top K and sort by natural order
-            List<Ad> topK = matchingAds.stream().limit(k).collect(Collectors.toList());
-            List<Ad> sortedTopK = new ArrayList<>(topK);
-            Collections.sort(sortedTopK);
+        scoredAds.sort((a, b) -> Double.compare(b.score, a.score));
 
-            selectedAds.addAll(sortedTopK);
+        List<Ad> topK = scoredAds.stream()
+                .limit(k)
+                .map(ScoredAd::getAd)
+                .collect(Collectors.toList());
 
-            pw.printf("Top ads for reques %s:%n", request.getId());
-            for (Ad ad : sortedTopK) {
-                pw.println(ad);
-            }
-            pw.println();
+        Collections.sort(topK);
+
+        pw.printf("Top ads for request %s:%n", request.getId());
+        for (Ad ad : topK) {
+            pw.println(ad);
         }
         pw.flush();
 
-        return selectedAds;
+        return topK;
     }
+
     private int relevanceScore(Ad ad, AdRequest req) {
         int score = 0;
         if (ad.getCategory().equalsIgnoreCase(req.getCategory())) score += 10;
+
         String[] adWords = ad.getContent().toLowerCase().split("\\s+");
         String[] keywords = req.getKeywords().toLowerCase().split("\\s+");
+
         for (String kw : keywords) {
             for (String aw : adWords) {
                 if (kw.equals(aw)) score++;
@@ -179,7 +144,19 @@ class AdNetwork {
         return score;
     }
 }
+class ScoredAd {
+    Ad ad;
+    double score;
 
+    ScoredAd(Ad ad, double score) {
+        this.ad = ad;
+        this.score = score;
+    }
+
+    public Ad getAd() {
+        return ad;
+    }
+}
 
 public class Main {
     public static void main(String[] args) throws IOException {
