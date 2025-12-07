@@ -1,0 +1,60 @@
+Implement a class LibrarySystem that will manage book reservations in a library. The class should contain members and books.
+
+Book class
+The class Book consists of:
+
+identification number - isbn
+title
+year of publication
+and other attributes needed for successfully tracking copies and loans.
+Member class
+The class Member consists of:
+
+identification number - id
+name
+and other attributes needed for borrowing books.
+Methods for the LibrarySystem class
+Constructor: LibrarySystem(String name)
+void registerMember(String id, String fullName) – registers a member among the other members, where each member initially has no borrowed books.
+addBook(String isbn, String title, String author, int year) – adds a book to the library, where a single book may have multiple copies.
+If a book with the same ISBN already exists, then the number of copies is increased by 1.
+If it does not exist – it is added with 1 copy.
+void borrowBook(String memberId, String isbn) – the member wants to borrow a book.
+Rules:
+
+If the book does not exist, the action is ignored.
+If the book exists but has no free copies, the member is placed on a waiting list for that book.
+If there is a free copy: it is assigned to the member and the number of available copies is decreased.
+void returnBook(String memberId, String isbn) – when a member returns a book:
+The number of available copies is increased.
+If there is a waiting list for that book – the first member on the list is automatically assigned a loan of the book (same as borrowBook).
+void printMembers() – print all members sorted by number of borrowed books (descending), and if equal, by member name (ascending).
+Example for one line:
+
+Gorazd (id27) - borrowed now: 5, total borrows: 17
+void printBooks() – print all books sorted by number of borrowings so far (descending), and if equal by year of publication (ascending).
+Example for one line:
+
+isbn1 - “The Hobbit” by Goch (2025), available: 199, total borrows: 2
+void printBookCurrentBorrowers(String isbn) – print the current ID numbers of the borrowers of the book with that ISBN, sorted and separated by commas.
+void printTopAuthors() – print the authors sorted by number of borrowings of their books (descending), and if equal, by name (ascending).
+Example for one line:
+
+Goch - 127
+
+INPUT ==================================================================
+CityLibrary
+registerMember M1 Ana
+registerMember M2 Bojan
+addBook ISBN1 Hobbit Tolkien 1937
+addBook ISBN1 Hobbit Tolkien 1937
+borrowBook M1 ISBN1
+borrowBook M2 ISBN1
+printMembers
+printBookCurrentBorrowers ISBN1
+END
+
+OUTPUT ===================================================================
+Ana (M1) - borrowed now: 1, total borrows: 1
+Bojan (M2) - borrowed now: 1, total borrows: 1
+M1, M2

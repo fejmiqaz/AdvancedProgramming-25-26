@@ -1,0 +1,86 @@
+Implement a simulation of an Ad Network that  reads data about ads and a single ad request, and then selects the most relevant ads based on a combination of several factors.
+
+Implement a class Adthat represents a single ad. The class should contain the following attributes:
+
+- id:String – ad identifier
+
+- category:String– category (for example: “tech”, “sports”, “food”)
+
+- bidValue:double– bid to display the ad (in dollars)
+
+- ctr:double– average click-through rate (Click-Through Rate)
+
+- content:String – text content (sentence)
+
+The class should have:
+
+- toString()which will display the object in the following format:
+
+ID CATEGORY (bid=…, ctr=…%) CONTENT
+
+Implement the interface Comparableso that the "natural order" will be by bidValue in descending order, and if bidValue is the same, by id in ascending order.
+
+
+Implement a class AdRequestthat will represent a request to display an ad.
+
+The class should contain the following attributes:
+
+id:String – request identifier
+
+category:String – request category
+
+floorBid:double – minimum allowed bid for displaying an ad
+
+keywords:String – keywords related to the query (separated by a space)
+
+The class should have:
+
+- toString()which will display the object in the following format:
+
+ID [CATEGORY] (floor=…): KEYWORDS
+
+
+Implement a class AdNetworkthat will represent the ad network and manage their display.
+
+The class should have the attribute:
+
+- ads:АrrayList<Ad>– list of all ads
+
+And the following methods:
+
+- void readAds(InputStream in)- method that reads ads from an input stream using a BufferedReader. For each row, an object of the class is created Adand added to the ads list . Each row is in the following format:
+
+ID CATEGORY BID_VALUE CTR CONTENT
+
+Example: AD001 tech 2.5 0.12 Amazing new phone
+
+
+- List placeAds(InputStream inputStream, int k, OutputStream outputStream) - a method that:
+
+1. Reads an ad request ( AdRequest) from the given input stream in the format:
+
+ID CATEGORY FLOOR_BID KEYWORD1 KEYWORD2 KEYWORD3…
+
+example: AR001 tech 2.0 technology phone application inches
+
+2. Excludes all ads that have a bidValue less than floorBid in the ad request
+
+3. For each advertisement, calculate the total value (score) according to the following formula:
+
+totalScore = relevanceScore(ad, request) + x * bidValue + y * ctr
+
+where: relevanceScore(ad, request)is a function that gives points by category and keywords (this function is already given and does not need to be changed) ,
+
+x = 5.0and y = 100.0 are constants that emphasize the influence of bid and CTR .
+
+4. Ads are sorted by totalScore in descending order, the top k ads are taken , and then sorted by the "natural" order of the class.
+
+5. The results are printed to PrintWriterthe given output stream in the following format:
+
+Top ads for request AR001:
+
+AD003 tech (bid=3.00, ctr=9.00%) Powerful gaming laptop
+
+AD001 tech (bid=2.50, ctr=12.00%) Amazing new phone
+
+…

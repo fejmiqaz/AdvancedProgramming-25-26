@@ -1,0 +1,63 @@
+A class for administration of a chat system needs to be developed. The system consists of multiple chat rooms, objects of the class ChatRoom. In ChatRoom we store the name of the room and the names of the users who are currently in that room (for the users use an appropriate Set).
+
+ChatRoom(String name) – creates a new empty chat room (empty means without users).
+addUser(String username) – adds the user with that name to the room.
+removeUser(String username) – removes the user with that name from the room if such exists, otherwise does nothing.
+toString():String – returns a string that contains the room name and all users that are in the room, each separated by a new line. Users are sorted alphabetically. If the room is empty, the room name is returned on one line, and on the second line the string "EMPTY" (quotes only for clarification).
+hasUser(String username):boolean – returns true if a user with that name exists in the room.
+numUsers():int – returns the number of users in the room.
+The main class ChatSystem contains all rooms and all users. Users may be members of one, more, or none of the rooms. For management of the rooms you should provide the following three methods:
+
+addRoom(String roomName) – adds a new empty room to the list of rooms.
+removeRoom(String roomName) – removes the room from the list.
+getRoom(String roomName):ChatRoom – returns the object that represents the room with name roomName. Throw NoSuchRoomException(roomName) if a room with that name does not exist.
+Note: Store the rooms in a TreeMap so they are always sorted by name.
+
+Additionally, in the class ChatSystem the following methods exist for working with users:
+
+ChatSystem() – default constructor
+register(String userName) – registers the user in the system. Adds the user to the room with the fewest users. If there are multiple such rooms, then adds them to the first room by lexicographic order.
+registerAndJoin(String userName, String roomName) – registers the user in the system. Additionally adds them to the room with name roomName.
+joinRoom(String userName, String roomName) – adds the user to the room with the corresponding name if it exists, otherwise throws an exception of type NoSuchRoomExcеption(roomName). If there is no registered user with that name, throw NoSuchUserException(userName).
+leaveRoom(String username, String roomName) – removes the user from the room with the corresponding name if it exists; otherwise throws an exception of type NoSuchRoomExcеption(roomName). If there is no registered user with that name, throw NoSuchUserException(userName).
+followFriend(String username, String friend_username) – the user with the name username joins all rooms in which the user with the name friendUsername is a member. If a registered user with that name does not exist, throw NoSuchUserException(userName).
+
+INPUT ==============================================
+1
+ addRoom room1
+ addRoom room2
+ addRoom room3
+ registerAndJoin user1 room1
+ registerAndJoin user2 room1
+ print room1
+ register user3
+ register user4 room3
+ joinRoom user2 room2
+ joinRoom user2 room3
+ followFriend user4 user2
+ print room1
+ print room2
+ print room3
+stop
+
+OUTPUT ================================================
+room1
+user1
+user2
+
+
+room1
+user1
+user2
+user4
+
+
+room2
+user2
+user3
+user4
+
+
+room3
+user2
+user4

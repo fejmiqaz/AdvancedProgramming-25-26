@@ -1,0 +1,20 @@
+Implement a cinema system - MovieTheaterThe cinema will maintain a list of movies that can be sorted by title, year, and ratings.
+
+ClassMovie
+
+title: String - title
+genre: String - genre
+year: int - year of publication
+avgRating: double - average rating
+To implement toString()who will print the film in the following format:
+Title, Genre, Year, Rating
+
+ClassMovieTheater
+
+movies: ArrayList<Movie> - list of movies in the Cinema
+Methods:
+
+readMovies(InputStream is)- a method for reading from an InputStream that will add the movies directly to the list with a BufferedReader
+printByGenreAndTitle()- displays movies sorted by genre, then by title
+printByYearAndTitle()- displays movies sorted by year, then by title
+printByRatingAndTitle()- displays movies sorted by rating, then by title

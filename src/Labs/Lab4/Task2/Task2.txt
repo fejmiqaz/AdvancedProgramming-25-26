@@ -1,0 +1,21 @@
+Your task is to implement the classes Studentaccording Facultyto the following specifications:
+
+The class Student:
+
+The constructor Student(String id, List<Integer> grades)initializes a student with a given ID and a list of grades.
+The method toString()returns a text representation of the student in the format Student{id='ID', grades=[grades]}.
+The class Faculty:
+
+The method addStudent(String id, List<Integer> grades)adds a new student to the collection with the given ID and a list of grades. If a student with the same ID already exists, it throws an exception with the message: "Student with ID <id> already exists". The method should have O(1) complexity.
+The method addGrade(String id, int grade)adds a new grade for an existing student with a given ID.  The method should have complexity O(1).
+The method getStudentsSortedByAverageGrade()returns Set<Student>students sorted in descending order by grade point average. If two students have the same grade point average, they are sorted by the number of courses taken, and then by ID in descending order.
+The method getStudentsSortedByCoursesPassed()returns Set<Student>students sorted in descending order by the number of courses passed. If two students have the same number of courses passed, they are sorted by their average grade, and then by their ID, both in descending order.
+
+
+Additional request for Friday the 13th:
+
+- Add the toString method and print the student's highest grade
+
+e.g. instead of Student{id='S001', grades=[6, 7, 8, 9, 10]} print Student{id='S001', grades=[6, 7, 8, 9, 10], maxGrade=10}
+
+- Implement a method  getStudentsSortedByMaxGrade() that returns  Set<Student> sorted students in descending order by the student's highest grade, then by the student's average grade, then by the index.

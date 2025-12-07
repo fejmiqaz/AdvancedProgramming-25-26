@@ -1,0 +1,8 @@
+Develop a TermFrequency class that will count how many times each word appears in a given text (String). It should not distinguish between lowercase and uppercase letters and should ignore punctuation marks (comma, period).
+
+The class should have the following methods:
+
+TermFrequency(InputStream inputStream, String[] stopWords)- a constructor that receives as arguments the input stream from which the text to be processed is read and a sequence of words to be ignored (not counted).
+countTotal():int- the total number of words in the text.
+countDistinct():int– the total number of unique words.
+mostOften(int k):List<String>- returns a list containing the k most frequently occurring words in the text, sorted by number of occurrences from highest to lowest. In case of the same number of occurrences, they are sorted alphabetically.

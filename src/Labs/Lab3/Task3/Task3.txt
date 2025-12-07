@@ -1,0 +1,69 @@
+It is necessary to implement a system for enrolling applicants at a university. The system manages:
+
+Faculties
+Study Programs
+Applicants
+The class Applicant:
+
+id: int- unique identifier of the applicant
+name: String- name of the applicant
+gpa: double- high school average
+subjectsWithGrade: List<SubjectWithGrade>- list of objects of the type SubjectWithGradewhere data on passed matriculation exams is stored
+studyProgramme: StudyProgramme- the study program in which the applicant is enrolled
+Implement the method addSubjectAndGrade(String subject, int grade)that adds a subject and grade to the list.
+
+In this class, it is necessary to implement the method: calculatePointswhich calculates how many total points an applicant has for the specific study program:
+
+average * 12
+for each subject in the matriculation examination:
+if the subject is on the list of appropriate subjects at the faculty: grade * 2
+if the course is NOT on the list of appropriate courses at the faculty: grade * 1.2
+
+The class StudyProgrammecontains data for:
+
+code: String- study program code
+name: String- name of the study program
+numPublicQuota: int- number of applicants who can enroll in the state quota
+numPrivateQuota: int- number of applicants who can enroll in a private quota
+enrolledInPublicQuota: int- number of applicants enrolled in the state quota
+enrolledInPrivateQuota: int- number of applicants enrolled in a private quota
+applicants: List<Applicant>- list of applicants
+In this class, it is necessary to implement the method calculateEnrollmentNumbersthat will calculate and set the values ​​of enrolledInPublicQuotaand enrolledInPrivateQuota.
+
+Important: The state quota is filled first, and then the private quota.
+
+To overload it toString()so that it displays:
+
+program name
+all applicants admitted to the state quota
+all applicants admitted to the private quota
+all rejected applicants
+The class Facultycontains data for:
+
+shortName: String- abbreviated name of the faculty (FINKI, FEIT, MEDFAK)
+appropriateSubjects: List<String>- list of subjects that are appropriate for the faculty
+studyProgrammes: List<StudyProgramme>- list of study programs
+To also overload toStringthe method that will print all study programs and applicants to the faculty according to the following criteria:
+
+the number of relevant courses at the faculty in ascending order
+the percentage of students admitted to a study program in descending order
+((number of students enrolled in the state quota + number of students enrolled in the private quota) / (number of places in the state quota + number of places in the private quota)) * 100
+student's points in descending order
+Implement the two methods in the class EnrollmentsIOthat are used for entering and printing data.
+
+The method readEnrollments:
+
+takes a list of study programs and an InputStream as arguments
+searches for the study program in the list of study programs according to the code entered
+creates the Applicant object, sets the attributes, and adds it to the list of applicants for the appropriate study program
+The input format is as follows:
+
+id;name;gpa;subject1:grade1;subject2:grade2;subject3:grade3;subject4:grade4;studyProgrammeCode
+
+where id is the applicant's identifier, name is the applicant's name, gpa is the applicant's grade point average, subjectN and gradeN are the subjects he/she took on the matriculation exam, and studyProgrammeCode is the study program he/she wants to enroll in.
+
+The method printRanked:
+
+receives a list of faculties as an argument
+prints all faculties according to the format available in the test examples and according to the criteria specified in the text.
+Implement all getters and setters as well as methods for adding elements to an array where necessary.

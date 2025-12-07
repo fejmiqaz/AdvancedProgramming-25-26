@@ -1,0 +1,16 @@
+This task is very similar to the task from Lab 4, task number 2 - however, now you will use a map to implement the Scheduler class and you do NOT need the Timestamp class .
+
+Task reminder: Develop a Scheduler class . This class stores objects of generic type T that are only referenced by time (an object of class Date ). The class should implement the following methods:
+
+Sheduler()- creates a new empty scheduler
+add(Date d, T t)- adds a new object to the scheduler
+remove(Date d):boolean- deletes the corresponding element from the scheduler if it exists and returns true, otherwise returns false
+next():T- returns the next object, that is, the object that is associated with a date closest to the current one and has not yet passed
+last():T- returns the next object, i.e. the object that is associated with a date closest to the current one and has already passed
+getAll(Date begin,Date end):ArrayList<Т>- returns a list of objects whose dates are between begin and end.
+Note : Two objects cannot have the same time.
+
+Implement two additional methods:
+
+getFirst():Т- returns the object associated with the smallest date (overall)
+getLast():Т- returns the object associated with the largest date (overall)
